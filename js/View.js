@@ -16,7 +16,7 @@ function LabyrinthView(w, h) {
         this.context.fillRect(0, 0, w, h);
     }
 
-    this.getDrawField = function (firstrow) {
+    this.drawField = function (firstrow) {
         var numH = h/d;
         var numW = w/d;
         var i;

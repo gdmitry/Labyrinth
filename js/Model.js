@@ -7,7 +7,7 @@ function LabyrinthModel(w, h) {
     var numH = h/d;
     var numW = w/d;
 
-    this.run = function () {
+    this.generateLabyrinth = function () {
         var field = [];
         var i;
 
@@ -23,7 +23,7 @@ function LabyrinthModel(w, h) {
             initRightBorder(field[i]);
             initBottomBorder(field[i]);
             if (i == numH-1) break; // avoid creating additional array element
-            field[i+1] = copyArray(field[i]);
+            field[i+1] = cloneRow(field[i]);
             prepareRow(field[i+1]);
         }
 
@@ -124,8 +124,8 @@ function LabyrinthModel(w, h) {
         return row;
     }
 
-    // clones an array of Cell objects
-    var copyArray = function(array) {
+    // clones an row of Cell objects
+    var cloneRow = function(array) {
         var outArray = [];
         var i;
         var len = array.length;
@@ -135,18 +135,7 @@ function LabyrinthModel(w, h) {
         }
 
         return outArray;
-    }
-
-    // prints an row
-    var outRow = function(row) {
-        var str = '';
-        var i;
-
-        for (i = 0; i < numW; i++) {
-            str = str.concat(row[i].getSetNumber(), ' ');
-        }
-        console.log(str);
-    }
+    }    
 
     // generate input and output
     this.getInOut = function () {
@@ -165,7 +154,7 @@ function LabyrinthModel(w, h) {
     }
 
     // find path in maze
-    this.getPath = function (field, start, end) {
+    this.setPathLabels = function (field, start, end) {
         var d = 0;
         var wave = [start];
 		var i;
@@ -216,8 +205,8 @@ function LabyrinthModel(w, h) {
                     }
                 }
             }
-           // console.log('teemp================================================');
 
+           // console.log('teemp============================================');
             wave = [];
             for (var i = 0; i < temp.length; i++){
                wave[i] = temp[i].slice();               
@@ -227,7 +216,6 @@ function LabyrinthModel(w, h) {
        } while (field[end[1]-1][end[0]-1].getLabel() < 0);// if the end is marked	
        
         printPathValues(field);
-		//findPathValues(field, end);
 		return field;
     }
 
@@ -249,7 +237,7 @@ function LabyrinthModel(w, h) {
     }
 	
 	// end - koordinates of end point
-	this.findPathValues = function(field, end) {
+	this.findPathKoordinates = function(field, end) {
 		var path_array = [];
 		var current = end;
         var k = 0;

@@ -12,31 +12,38 @@
 <script type="text/javascript" charset="utf-8" src="js/View.js"></script>
 <img id="ball" src="images/redBall.gif" style="position:absolute; width:20px; left:50px; top:30px;" alt="red ball"/>
 <canvas width="350" height="350"></canvas>
-<script>
-// http://javascriptissexy.com/oop-in-javascript-what-you-need-to-know/
-   // document.getElementById("ball").style.visibility = "hidden";
-	
+<a href="#" id="dima">Start the ball</a>
+<script>	
+    var domBall = document.getElementById("ball").style.visibility = 'hidden';
   	var context = document.querySelector("canvas").getContext("2d");
     var view = new LabyrinthView(300, 300);
     var model = new LabyrinthModel(300, 300);
   	var ball = new Ball();
-	
+    var field;
+    var o;
+    var path;    
+
     view.init(context);
     view.drawBorders();
     // get an array of maze' cells
-    var field = model.run();
-    view.getDrawField(field);
+    field = model.generateLabyrinth();
+    view.drawField(field);
 	
-    var o = model.getInOut();
+    o = model.getInOut();
     view.drawInOut(o);
     console.log('In: '.concat(o[0][0],' ', o[0][1]));
     console.log('Out: '.concat(o[1][0],' ', o[1][1]));
-    model.getPath(field, o[0], o[1]);
+    model.setPathLabels(field, o[0], o[1]);
 	
-	var path = model.findPathValues(field, o[1]);	
-	view.drawRoute(path);
-	//ball.startBall2(path);
+  	path = model.findPathKoordinates(field, o[1]);	
+  	view.drawRoute(path);	
+
+    function startAnimation(event) {
+      ball.startBall(path);
+    }
+
+    var element = document.getElementById("dima");
+    element.onclick = startAnimation;
 </script>
-<a href="#" onclick=" new Ball().startBall2(path);return false;">here</a>
 </body>
 </html>
