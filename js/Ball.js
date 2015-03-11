@@ -1,44 +1,45 @@
+'use strict';
 /**
  * Created by Dima on 04.03.2015.
  */
-function Ball() {
+function Ball(d) {
+    
+    this.diameter = d || 20;
+    var self = this;
+    var timer = null;
+    var s = 0;      
+ 	var domBall = document.getElementById("ball");
 
-	var timer2 = null;
-	var s = 0;	
-	var d = 20;
+    function stepBall(path) {       
+        var  diameter = self.diameter;
+        var left;
+        var top;
 
-	function moveDomObj(left, top) {
-	  var domObj = document.getElementById("ball");
+        if (s == 0) {
+           domBall.style.visibility = 'visible';
+    	}        
 
-	  domObj.style.left = left+"px";
-	  domObj.style.top = top+"px";
-	}	
+    	left = path[s][0]*diameter-diameter/2; // x
+      	top = path[s][1]*diameter-diameter/2;  // y
 
-	function stepBall() {
+      	domBall.style.left = left+"px";
+	    domBall.style.top = top+"px";
 
-		if (s == 0) {
-			document.getElementById("ball").style.visibility = 'visible';
-		}
+      	s++;
+      	if (s<path.length) {
+    		timer = setTimeout(function(){
+        		stepBall(path);
+          	}, 120);
+        } else {
+        	s = 0;     
+      	}  
+    }
 
-	  x = path[s][0]*d-d/2;
-	  y = path[s][1]*d-d/2;   
-		
-	  moveDomObj(x, y);
-	  s++;
-	  if (s<path.length)
-	  {
-	    timer2 = setTimeout(stepBall, 120);
-	  }
-	  else
-	  {
-	    s = 0;     
-	  }	  
+    this.startBall = function (path) {        
+	    timer = setTimeout(function(){
+	    stepBall(path);
+	    }, 100);
+    }
 
-	}
-
-	this.startBall = function startBall2(path, d) {	
-	  
-	  timer2 = setTimeout(stepBall, 100);
-	}
     return this;
 }
