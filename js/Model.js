@@ -1,13 +1,14 @@
+"use strict";
 /**
  * Created by Dima on 03.03.2015.
  */
-function LabyrinthModel(w, h) {
+function MazeModel(w, h) {
 
     var d = 20; //size of cell
     var numH = h/d;
     var numW = w/d;
 
-    this.generateLabyrinth = function () {
+    this.generateMaze = function () {
         var field = [];
         var i;
 
@@ -15,7 +16,7 @@ function LabyrinthModel(w, h) {
 
         // init first row
         for (i = 0; i < numW; i++) {
-            field[0][i] = new Cell(-1);
+            field[0][i] = new Cell();
         }
 
         for (i = 0; i < numH; i++) {
@@ -30,8 +31,8 @@ function LabyrinthModel(w, h) {
         // remove borders in last row
         // belonging different cells
         for (i = 0; i < numW-1; i++) {
-            if (field[numH-1][i].getSetNumber() != field[numH-1][i+1].getSetNumber()) {
-                field[numH-1][i].setRightBorder('no');
+            if (field[numH-1][i].setNumber != field[numH-1][i+1].setNumber) {
+                field[numH-1][i].hasRightBorder = false;
             }
         }
         return field;
@@ -39,9 +40,8 @@ function LabyrinthModel(w, h) {
 
     // set border or not
     var randomBorder = function() {
-        var num =  Math.floor(Math.random() * 100) + 1;
-        if (num % 2 == 0) return 'yes';
-        return 'no';
+        var num = Math.random() > 0.5;        
+        return num;
     }
 
     // sets init setNumber
@@ -50,13 +50,13 @@ function LabyrinthModel(w, h) {
         var i;
         
         for (i = 0; i < numW; i++) {
-            if (row[i].getSetNumber() == -1) {
-                while (checkUnique(row, setNumber) != true) {
+            if (row[i].setNumber == -1) {
+                while (!checkUnique(row, setNumber)) {
                     setNumber++;
                 }
-                row[i].setSetNumber(setNumber);
+                row[i].setNumber = setNumber;
             } else {
-                setNumber = row[i].getSetNumber();
+                setNumber = row[i].setNumber;
             }
         }
         return row;
@@ -68,7 +68,7 @@ function LabyrinthModel(w, h) {
         var i;
 
         for (i = 0; i < numW; i++) {
-            if (row[i].getSetNumber() == setNumber) {
+            if (row[i].setNumber == setNumber) {
                 return false;
             }
         }
@@ -80,13 +80,13 @@ function LabyrinthModel(w, h) {
         var i;
 
         for (i = 0; i < numW-1; i++) {
-            if (randomBorder() == 'no') {
-                row[i+1].setSetNumber(row[i].getSetNumber());
+            if (randomBorder() == false) {
+                row[i+1].setNumber = row[i].setNumber;
             } else {
                 // if they are already in one set
                 // should not add border
                // if(row[i+1].getSetNumber() != row[i].getSetNumber())
-                    row[i].setRightBorder('yes');
+                    row[i].hasRightBorder = true;
             }
 
         }
@@ -95,13 +95,14 @@ function LabyrinthModel(w, h) {
 
     // sets bottom border
     var initBottomBorder = function(row) {
-        var i = 0;
+        var i;
         var k;
 
+        i = 0;
         while (i < numW-1) {
             k = i;
-            while ((k+1 < numW) && (row[k+1].getSetNumber() == row[k].getSetNumber())){
-                row[k].setBottomBorder(randomBorder());
+            while ((k+1 < numW) && (row[k+1].setNumber == row[k].setNumber)){
+                row[k].hasBottomBorder = randomBorder();
                 k++;
             }
             i = k+1;
@@ -114,10 +115,10 @@ function LabyrinthModel(w, h) {
         var i;
 
         for (i = 0; i < numW; i++) {
-             row[i].setRightBorder('no');
-             if (row[i].getBottomBorder() == 'yes'){
-                 row[i].setSetNumber(-1);
-                 row[i].setBottomBorder('no');
+             row[i].hasRightBorder = false;
+             if (row[i].hasBottomBorder == true){
+                 row[i].setNumber = -1;
+                 row[i].hasBottomBorder = false;
              }
         }
 
@@ -142,7 +143,7 @@ function LabyrinthModel(w, h) {
         var x1, x2;
         var y1, y2;
 
-        if (randomBorder() == 'yes') {
+        if (randomBorder() == true) {
            x1 = Math.floor(Math.random() * numW) + 1;
            x2 = Math.floor(Math.random() * numW) + 1;
            return [[x1,1], [x2, numH]];
@@ -161,7 +162,9 @@ function LabyrinthModel(w, h) {
         var k;
         var temp;
         var wavelen;
-
+        var x;
+        var y;
+        
         do {
             temp = [];
             k = 0;
@@ -172,34 +175,34 @@ function LabyrinthModel(w, h) {
                 y = wave[i][1];
 
 
-                if (field[y-1][x-1].getLabel() > -1)
+                if (field[y-1][x-1].label > -1)
                     continue;
 
-                field[y-1][x-1].setLabel(d);
+                field[y-1][x-1].label = d;
 
-                if (y>1) { // top
-                    if (field[y-2][x-1].getBottomBorder() == 'no') {
+                if (y > 1) { // top
+                    if (field[y-2][x-1].hasBottomBorder == false) {
                         temp[k] = [x, y-1];
                         k++;
                     }
                 }
 
-                if (x<numW) { // right
-                    if (field[y-1][x-1].getRightBorder() == 'no') {
+                if (x < numW) { // right
+                    if (field[y-1][x-1].hasRightBorder == false) {
                         temp[k] = [x+1, y];
                         k++;
                     }
                 }
 
-                if (y<numH) { // bottom
-                    if (field[y-1][x-1].getBottomBorder() == 'no') {
+                if (y < numH) { // bottom
+                    if (field[y-1][x-1].hasBottomBorder == false) {
                         temp[k] = [x, y+1];
                         k++;
                     }
                 }
 
-                if (x>1) { // left
-                    if (field[y-1][x-2].getRightBorder() == 'no') {
+                if (x > 1) { // left
+                    if (field[y-1][x-2].hasRightBorder == false) {
                         temp[k] = [x-1, y];
                         k++;
                     }
@@ -213,7 +216,7 @@ function LabyrinthModel(w, h) {
             }
            // console.log('================================================');
             d++;
-       } while (field[end[1]-1][end[0]-1].getLabel() < 0);// if the end is marked	
+       } while (field[end[1]-1][end[0]-1].label < 0);// if the end is marked	
        
         printPathValues(field);
 		return field;
@@ -229,7 +232,7 @@ function LabyrinthModel(w, h) {
         for (i = 0; i < numH; i++) {
             str = '';
             for (j = 0; j < numW; j++) {
-                str = str.concat(field[i][j].getLabel(), ' ');
+                str = str.concat(field[i][j].label, ' ');
             }
             console.log(str);
         }
@@ -259,43 +262,42 @@ function LabyrinthModel(w, h) {
 			temp = []; // temporary array for searching min
 			i = 0;				
 			
-			///////////////////////////////////////////////////////////////////////////////////////////////
-				if (y>1) { // top
-                    if (field[y-2][x-1].getBottomBorder() == 'no') {
-                        top = field[y-2][x-1].getLabel();
+				if (y > 1) { // top
+                    if (field[y-2][x-1].hasBottomBorder == false) {
+                        top = field[y-2][x-1].label;
 						if (top !=-1){
 							temp[i] = top; i++;
 						}
                     }
                 }
 
-                if (x<numW) { // right
-                    if (field[y-1][x-1].getRightBorder() == 'no') {
-                        right = field[y-1][x].getLabel();
+                if (x < numW) { // right
+                    if (field[y-1][x-1].hasRightBorder == false) {
+                        right = field[y-1][x].label;
 						if (right !=-1){
 							temp[i] = right; i++;
 						}
                     }
                 }
 
-                if (y<numH) { // bottom
-                    if (field[y-1][x-1].getBottomBorder() == 'no') {
-                        bottom = field[y][x-1].getLabel();
+                if (y < numH) { // bottom
+                    if (field[y-1][x-1].hasBottomBorder == false) {
+                        bottom = field[y][x-1].label;
 						if (bottom !=-1){
 							temp[i] = bottom; i++;
 						}
                     }
                 }
 
-                if (x>1) { // left
-                    if (field[y-1][x-2].getRightBorder() == 'no') {
-                        left = field[y-1][x-2].getLabel();
+                if (x > 1) { // left
+                    if (field[y-1][x-2].hasRightBorder == false) {
+                        left = field[y-1][x-2].label;
 						if (left !=-1){
 							temp[i] = left; i++;
 						}
                     }
                 }
-			//////////////////////////////////////////////////////////////////////////////////////////
+			
 			min = Math.min.apply(Math, temp);
 			if (top == min) {
 				current = [x, y-1];
@@ -310,9 +312,9 @@ function LabyrinthModel(w, h) {
 				current = [x+1, y];
 			}			
 			k++;
-       } while (field[current[1]-1][current[0]-1].getLabel() != 0);// if the start is marked
+       } while (field[current[1]-1][current[0]-1].label != 0);// while the start is not marked
 		path_array[k] = current; // adds start cell to path_array
-		return path_array;
+		return path_array.reverse(); // to begin with start point
     }
 	
 

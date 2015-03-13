@@ -1,7 +1,8 @@
+"use strict";
 /**
  * Created by Dima on 03.03.2015.
  */
-function LabyrinthView(w, h) {
+function MazeView(w, h) {
 
     var w = w;
     var h = h;
@@ -24,14 +25,14 @@ function LabyrinthView(w, h) {
 
         for (j = 0; j < numH; j++) {
             for (i = 0; i < numW; i++) {
-                if (firstrow[j][i].getRightBorder() == 'yes') {
+                if (firstrow[j][i].hasRightBorder == true) {
                     context.beginPath();
                     context.moveTo(i*d+d, j*d+1);
                     context.lineTo(i*d+d,j*d+1+d);
                     context.stroke();
                 }
 
-                if (firstrow[j][i].getBottomBorder() == 'yes') {
+                if (firstrow[j][i].hasBottomBorder == true) {
                     context.beginPath();
                     context.moveTo(i*d, j*d+d);
                     context.lineTo(i*d+d,j*d+d);
@@ -72,11 +73,11 @@ function LabyrinthView(w, h) {
 	 this.drawRoute = function (route) {
         var i;
 
-		console.log(route);
+		//console.log(route);
 		context.lineWidth=2;
         context.strokeStyle = 'white';
         context.beginPath();
-		 context.moveTo(route[0][0]*d-d/2+1,route[0][1]*d-d/2+2);
+		context.moveTo(route[0][0]*d-d/2+1,route[0][1]*d-d/2+2);
 		for (i = 1; i < route.length; i++) {
 			context.lineTo(route[i][0]*d-d/2+1,route[i][1]*d-d/2+2);
 		}
