@@ -1,4 +1,3 @@
-"use strict";
 /**
  * Created by Dima on 03.03.2015.
  */
@@ -162,9 +161,7 @@ function MazeModel(w, h) {
         var k;
         var temp;
         var wavelen;
-        var x;
-        var y;
-        
+
         do {
             temp = [];
             k = 0;
@@ -317,7 +314,6 @@ function MazeModel(w, h) {
 		return path_array.reverse(); // to begin with start point
     }
 	
-
     return this;
 
 }

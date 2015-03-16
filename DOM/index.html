@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Labyrinth</title>
+  <meta name="description" content="The HTML5 Herald">
+  <meta name="author" content="SitePoint">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<script type="text/javascript" charset="utf-8" src="js/Maze_namespace.js"></script>
+<script type="text/javascript" charset="utf-8" src="js/Cell.js"></script>
+<script type="text/javascript" charset="utf-8" src="js/Ball.js"></script>
+<script type="text/javascript" charset="utf-8" src="js/Model.js"></script>
+<script type="text/javascript" charset="utf-8" src="js/View.js"></script>
+<div class="content">
+</div>
+<form action="">
+Width:  <input type="text" id="x" value="15"><br>
+Height: <input type="text" id="y" value="15"><br>
+Current path's number: <input type="text" id="numPath"><br>
+Number of all possible paths: <input type="text" id="numPaths"><br>
+<a href="#" id="generateMaze">Generate maze</a> 
+<a href="#" id="findPaths">Find paths</a> 
+<a href="#" id="start">Start the ball</a>
+<a href="#" id="clearPath">Clear path</a>
+</form> 
+<script>  	
+	var maze;
+	var ball = new Ball();
+	var paths;
+	var path;
+	var element;			
+	var i = 0;
+	
+	generateMaze(); // default maze	
+	function generateMaze(event) {
+		var x =  parseInt(document.getElementById('x').value, 10);
+		var y = parseInt(document.getElementById('y').value, 10);		
+		element = document.querySelector('.canvas');
+		if (element != null) {
+			element.parentNode.removeChild(element);
+		}
+		Maze.init(document.querySelector('.content'));
+		maze = Maze.generate(x, y);
+		Maze.render(maze);
+		ball.init(document.querySelector('.canvas'));
+		paths = null;	
+		document.getElementById('numPath').value = " ";	
+		document.getElementById('numPaths').value = " ";	
+		i = 0;
+		path = null;
+    }
+	
+	function findPaths(event) {
+		i = 0;
+		path = null;
+		//path = Maze.getMinPath(maze); // find min path
+		paths = Maze.getPaths(maze);    // find all possible paths
+		sortPaths(paths);	
+		document.getElementById('numPaths').value = paths.length;
+		console.log("Number of all possible paths: " + paths.length);
+		console.log("Min path length: " + paths[0].length);
+		console.log("Max path length: " + paths[paths.length-1].length);
+	}
+	
+	function startAnimation(event) {
+		if (path != null) {
+			ball.startBall(path);
+		}		
+    }
+		 
+	function clearPath(event) {
+		if (i >= paths.length) {
+			i = 0;
+		}
+		Maze.clearPath();
+		path = paths[i++].reverse();			
+		Maze.renderPath(path);		
+		document.getElementById('numPath').value = i;
+	}	
+	
+	function sortPaths(paths) {
+		var minPath;
+		var pathLengths;
+		var i, j, k;
+		var length;
+		var temp;
+		
+		length = paths.length;		
+		for (i = 0; i < length; i++) {				
+			for (j = 0; j < length - i - 1; j++) {
+				temp = paths[j];
+				if (temp.length > paths[j+1].length) {
+					paths[j] = paths[j+1];
+					paths[j+1] = temp;
+				}
+			}				
+		}
+		
+		
+		return paths;
+	}
+	
+    element = document.getElementById("start");
+    element.onclick = startAnimation;
+	
+	element = document.getElementById("findPaths");
+    element.onclick = findPaths;
+	
+	element = document.getElementById("generateMaze");
+    element.onclick = generateMaze;
+	
+	element = document.getElementById("clearPath");
+    element.onclick = clearPath;	
+</script>
+</body>
+</html>
