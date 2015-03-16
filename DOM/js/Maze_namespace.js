@@ -23,7 +23,8 @@ var Maze = {
 	
 	getPaths: function(maze) {	
 		var endCell = inOut[1];
-		mazeModel.setPathLabels(maze, inOut);
+		var startCell = inOut[0];		
+		maze[startCell[1]-1][startCell[0]-1].label = 0;
 		var mazePaths = mazeModel.findAllPaths(maze, endCell); 		
 		return mazePaths;
     },
