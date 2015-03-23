@@ -1,4 +1,4 @@
-var Module = (function () {
+var Graph = (function () {
  	"use strict";
 
  	var vertexs; // array of cells as vertexs of graph
@@ -240,10 +240,10 @@ var Module = (function () {
 
 	return {  	
 	  	// Creates an empty graph
-		createGraph: function(initWidth, initHeight) {
+		createGraph: function(options) {
 			"use strict";
-			width = initWidth;
-			height = initHeight;		
+			width = options.width;
+			height = options.height;		
 
 			vertexs = [];
 			// create array of vertexs
@@ -262,9 +262,11 @@ var Module = (function () {
 			return vertexs;
 		},
 
-		generatePaths: function(start, finish, possiblePaths) {
+		generatePaths: function(options) {
 			"use strict";
-
+			var start = options.start;
+			var finish = options.finish;
+			var possiblePaths = options.possiblePaths;
 			var temp;
 			var PointA;
 			var PointB;			

@@ -10,8 +10,10 @@
 <body>
 <script type="text/javascript" charset="utf-8" src="js/Maze.js"></script>
 <script type="text/javascript" charset="utf-8" src="js/Graph.js"></script>
-<script type="text/javascript" charset="utf-8" src="js/RandomMaze.js"></script>
-<script type="text/javascript" charset="utf-8" src="js/Ball.js"></script>
+<script type="text/javascript" charset="utf-8" src="js/Maze/Cell.js"></script>
+<script type="text/javascript" charset="utf-8" src="js/Maze/Path.js"></script>
+<script type="text/javascript" charset="utf-8" src="js/Maze/View.js"></script>
+<script type="text/javascript" charset="utf-8" src="js/Maze/Ball.js"></script>
 <div class="content">
 <table>
   <tr>
@@ -47,8 +49,7 @@
     <td><button id = "generate" type="button">Generate maze</button></td>
     <td><button type="button" id="renderMaze">Render maze</button></td>    
     <td><button type="button" id="getPaths">Get paths</button></td>
-    <td><button type="button" id="renderPath">Render path</button></td>
-    <td><button type="button" id="clearPath">Clear path</button></td>
+    <td><button type="button" id="renderPath">Render path</button></td>   
   </tr>
 </table>
 <hr>
@@ -66,7 +67,7 @@
 
     var view = new Maze.View(document.querySelector('#maze'));  
 
-    var ball = new Ball();
+    var ball = new Maze.Ball(document.querySelector('#maze'));
 
    /* view.render(maze);
      
@@ -94,14 +95,12 @@
             possiblePaths: possiblePaths,
             start: {x: parseInt(start[0],10), y: parseInt(start[1],10)},
             finish: {x: parseInt(finish[0],10), y: parseInt(finish[1],10)}
-        });  
-     
+        });      
      
     }
   
     function renderMaze(event) {
-        view.render(maze);
-        ball.init(document.querySelector('#maze'));
+        view.render(maze);       
     }
 
     function getPaths(event) {
@@ -119,37 +118,32 @@
 
     function renderPath(event) {
         console.log(index);
-        view.render(paths[index]);
-        ball.startBall(paths[index]);
+        view.render(paths[index]);        
+        //ball.startBall(paths[index]);
+        ball.startBall(new Maze.Path({data: [{x: 2, y: 3}], maze: maze}));
+
         if (index < paths.length-1) {            
             index++;
         } else {
             index = 0;
         }
 
-    }
-     
-    function clearPath(event) {
-       view.clearPath();
     } 
-  
     
-  var element;
+    var element;
 
-  element = document.getElementById("generate");
-  element.onclick = generateMaze;
-  
-  element = document.getElementById("renderMaze");
-  element.onclick = renderMaze;
-  
-  element = document.getElementById("getPaths");
-  element.onclick = getPaths;
-  
-  element = document.getElementById("renderPath");
-  element.onclick = renderPath; 
+    element = document.getElementById("generate");
+    element.onclick = generateMaze;
+    
+    element = document.getElementById("renderMaze");
+    element.onclick = renderMaze;
+    
+    element = document.getElementById("getPaths");
+    element.onclick = getPaths;
+    
+    element = document.getElementById("renderPath");
+    element.onclick = renderPath; 
 
-  element = document.getElementById("clearPath");
-  element.onclick = clearPath;  
 </script>
 </body>
 </html>
