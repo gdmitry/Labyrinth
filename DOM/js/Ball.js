@@ -24,8 +24,8 @@ function Ball() {
            domBall.style.visibility = 'visible';
     	}        
 
-    	left = (path[s][0]-1)*diameter; // x
-      	top = (path[s][1]-1)*diameter;  // y
+    	left = (path[s].x-1)*diameter; // x
+      	top = (path[s].y-1)*diameter;  // y
 
       	domBall.style.left = left+"px";
 	    domBall.style.top = top+"px";
@@ -40,9 +40,11 @@ function Ball() {
         } 
     }
 
-    this.startBall = function (path) {  
+    this.startBall = function (path) { 
+		var data = path.getData();
+		
 	    timer = setTimeout(function(){
-	    stepBall(path);
+	    stepBall(data);
 	    }, 100);
     }
 

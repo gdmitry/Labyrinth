@@ -2,7 +2,7 @@
 	padding: 10px;
 }
 
-.canvas {
+.field {
 	position: relative;
 }
 
@@ -22,6 +22,15 @@
 .cellBottomBorder {	
 	 border-bottom: 2px solid;	
 }
+
+.cellLeftBorder {	
+	 border-left: 2px solid;	
+}
+
+.cellTopBorder {	
+	 border-top: 2px solid;	
+}
+
 
 .inCell {
 	height:20px;
@@ -44,7 +53,7 @@
 .outCell:after {
 	text-align: center;
 	content: "Out";
-	color: red;	
+	color: red;	4/
 }
 
 .cellPath {
@@ -61,11 +70,17 @@
 	z-index: 10;
 }
 
-.border {
-	border-color: black;
-	position:absolute; 
-	border: 2px solid;	
-	box-sizing: border-box;
-	left:0px;
-	top:0px;
+hr { 
+    display: block;
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+    margin-left: auto;
+    margin-right: auto;
+    border-style: inset;
+    border-width: 1px;
+} 
+
+input {
+	width: 105px;
 }
+
