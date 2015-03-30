@@ -3,15 +3,18 @@
 }
 
 .field {
+
 	position: relative;
+ 
 }
 
+.board {
+	margin: -2px;
+}
 .cell {
 	border-color: black;
 	float: left;
-	box-sizing: border-box;
-	height:20px;
-    width:20px;
+	box-sizing: border-box;	
 	background-color: #6495ed;	
 }
 
@@ -31,39 +34,13 @@
 	 border-top: 2px solid;	
 }
 
-
-.inCell {
-	height:20px;
-    width:20px;	
-	position: absolute;	 
-}
-
-.inCell:after {
-	text-align: center;
-	content: "In";
-	color: yellow;	
-}
-
-.outCell {
-	height:20px;
-    width:20px;
-	position: absolute;
-}
-
-.outCell:after {
-	text-align: center;
-	content: "Out";
-	color: red;	4/
-}
-
 .cellPath {
 	background-color: #0CF01B;
 }
 
-.ball{
-	/*background-image:url("./images/redBall.gif");*/
-	position:absolute; 
-	width:20px;
+.ball{	
+	position: absolute; 
+	width:19px;
 	left:50px;
 	top:30px;
 	visibility: hidden;

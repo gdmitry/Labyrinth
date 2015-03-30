@@ -12,8 +12,8 @@
 		return;
 	};
 
-	  // the 'this' keyword refers to the object instance
-	  // you can access only 'privileged' and 'public' members	 
+	 // the 'this' keyword refers to the object instance
+	 // you can access only 'privileged' and 'public' members	 
 	Maze.prototype.getPaths = function(start, finish) {	
 
 		var findAllPaths = function(x, y, path) {			
@@ -108,27 +108,157 @@
 		var start = options.start;
 		var finish = options.finish;		
 		var paths;
-		var i, j;
+		var i, j;		
 
 		console.log("-------------------------------------------------------------------------------------");
 		console.log("W= " + width + " H= " + height);
-		var data = [];
 		
-		// create and init data array
-		for (i = 0; i < height; i++) {	
-			data[i] = [];		
-			for (j = 0; j < width; j++) {
-				data[i][j] = new Maze.Cell();
-			}
+		var countBorders = function (cell) {
+			var top = cell.top ? 1 : 0;
+			var bottom = cell.bottom ? 1 : 0;
+			var left = cell.left ? 1 : 0;
+			var right = cell.right ? 1 : 0;
+			return (top + bottom + left + right);
+		}
+		
+		var getRandomInt = function(min, max) {
+			"use strict";
+			return Math.floor(Math.random() * (max - min + 1)) + min;
 		}
 
-		// generation of paths
-		Graph.createGraph({width: width, height: height});
-		paths = Graph.generatePaths({start: start, finish: finish, possiblePaths: possiblePaths});		
-		var vertexes = Graph.getVertexs();
+		var digLockedTunnels = function() {
+			var deadCells = [];
+ 			var cell;
+
+	 		// create and init data array
+
+	 		for (i = 0; i < height; i++) {
+	 			for (j = 0; j < width; j++) {
+	 					cell = vertexes[i][j];
+	 				if (countBorders(cell) == 4) {
+	 					deadCells.push({x: i+1, y: j+1});
+	 				}
+	 			}
+	 		}
+
+	 		deadCells.reverse();
+	 		var x;
+	 		var y;
+	 		var currentVertex;
+	 		var direction;
+			var path; 
+
+	 		while (deadCells.length != 0) {
+	 			cell = deadCells.pop();
+	 			x = cell.x;
+	 			y = cell.y;
+	 			currentVertex = vertexes[x-1][y-1];
+
+	 			while(countBorders(currentVertex) > 2) {
+	 				while (true) {
+	 				    direction = getRandomInt(1,4);
+	 					if ((direction === 1)  && (currentVertex.top === true)) { // top
+	 					    currentVertex.top = false;
+	 			            x = x - 1; 
+	 			           	vertexes[x-1][y-1].bottom = false;
+	 			           	break;
+	 			        } 			
+
+	 				   	if ((direction === 2) && (currentVertex.right === true)) { // right
+	 			           	currentVertex.right = false;
+	 			          	y = y + 1;
+	 			          	vertexes[x-1][y-1].left = false;
+	 			           	break;
+	 			        }			   
+
+	 				   	if ((direction === 3)  && (currentVertex.bottom === true)) { // bottom
+	 			           	currentVertex.bottom = false;
+	 			            x = x + 1;
+	 			            vertexes[x-1][y-1].top = false;
+	 			            break;
+	 				   	}
+
+	 				    if ((direction === 4) && (currentVertex.left === true)) { // left
+	 				        currentVertex.left = false;
+	 				        y = y - 1;
+	 				        vertexes[x-1][y-1].right = false;
+	 				        break;
+	 				    }
+
+	 				}
+
+	 		    	currentVertex = vertexes[x-1][y-1];
+	 			}
+
+	 		}			
+		}
+		// all cells have at least one path
+		var digTunnels = function(options) {
+			var x = options.x;
+			var y = options.y;		
+			var currentVertex = vertexes[x-1][y-1];			
+			var nextVertex;
+			
+			if ((currentVertex.top === true)) {
+				nextVertex = vertexes[x-2][y-1];
+				if (countBorders(nextVertex) == 4) {				
+					currentVertex.top = false;
+					nextVertex.bottom = false;
+					digTunnels({x: x-1, y: y});
+				}	
+			}
+				
+			if ((currentVertex.bottom === true)) {
+				nextVertex = vertexes[x][y-1];
+				if (countBorders(nextVertex) == 4){			
+					currentVertex.bottom = false;
+					nextVertex.top = false;
+					digTunnels({x: x+1, y: y});
+				}	
+
+			}			
+
+			if ((currentVertex.left === true)){
+				nextVertex = vertexes[x-1][y-2];
+				if (countBorders(nextVertex) == 4) {			
+					currentVertex.left = false;
+					nextVertex.right = false;
+					digTunnels({x: x, y: y-1});
+				}
+			}
+
+			if ((currentVertex.right === true)){
+				nextVertex = vertexes[x-1][y];
+				if (countBorders(nextVertex) == 4) {				
+					currentVertex.right = false;
+					nextVertex.left = false;
+					digTunnels({x: x, y: y+1});
+				}	
+			}			
+			
+		}
 
 		
-		var maze = new Maze({data: data});	
+		Graph.createGraph({width: width, height: height});
+		paths = Graph.generatePaths({start: start, finish: finish, possiblePaths: possiblePaths});
+		
+		var vertexes = Graph.getVertexs();		
+		var path;
+		var len;
+		var elem;
+		var currentVertex;
+		var x, y;
+		// пройтись по всем ячейкам пути (ей)
+		for (j = 0; j < paths.length; j++) {
+			path = paths[j];
+			len = path.length;
+			for (i = 0; i < len; i++) {
+				elem = path[i];
+				digTunnels({x: elem.y, y: elem.x});
+			}
+		}	
+
+		var maze = new Maze({data: vertexes});			
 		return maze;
 	};
 

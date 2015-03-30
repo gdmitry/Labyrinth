@@ -12,7 +12,8 @@
 <script type="text/javascript" charset="utf-8" src="js/Graph.js"></script>
 <script type="text/javascript" charset="utf-8" src="js/Maze/Cell.js"></script>
 <script type="text/javascript" charset="utf-8" src="js/Maze/Path.js"></script>
-<script type="text/javascript" charset="utf-8" src="js/Maze/View.js"></script>
+<script type="text/javascript" charset="utf-8" src="js/Maze/HtmlView.js"></script>
+<script type="text/javascript" charset="utf-8" src="js/Maze/CanvasView.js"></script>
 <script type="text/javascript" charset="utf-8" src="js/Maze/Ball.js"></script>
 <div class="content">
 <table>
@@ -57,23 +58,15 @@
 </div>
 </div>
 <script>  	
- 	  var maze = Maze.generate({
-        width: 15,
-        height: 15,
-        possiblePaths: 3,
-        start: {x:1, y:1},
-        finish: {x:15, y:15}
-    });
-
-    var view = new Maze.View(document.querySelector('#maze'));  
-
+ 
+    //var view = new Maze.HtmlView(document.querySelector('#maze')); 
+    var view = new Maze.CanvasView(document.querySelector('#maze')); 
     var ball = new Maze.Ball(document.querySelector('#maze'));
+    var paths =[];
+    var element;
+    var index = 0;
 
-   /* view.render(maze);
-     
-    var paths = maze.getPaths({x:1, y:1}, {x:15, y:15});
-  
-    setTimeout(function () {
+  /*  setTimeout(function () {
       view.render(paths[0]);
     }, 2000);
    
@@ -114,13 +107,9 @@
         alert("Found " + paths.length + " paths");
     }
 
-    var index = 0;
-
-    function renderPath(event) {
-        console.log(index);
+    function renderPath(event) {      
         view.render(paths[index]);        
-        //ball.startBall(paths[index]);
-        ball.startBall(new Maze.Path({data: [{x: 2, y: 3}], maze: maze}));
+        ball.startBall(paths[index]);
 
         if (index < paths.length-1) {            
             index++;
@@ -128,9 +117,7 @@
             index = 0;
         }
 
-    } 
-    
-    var element;
+    }     
 
     element = document.getElementById("generate");
     element.onclick = generateMaze;

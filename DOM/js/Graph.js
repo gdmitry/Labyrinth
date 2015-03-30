@@ -5,33 +5,20 @@ var Graph = (function () {
  	var width;
 	var height;
 	var i;
-	var j;
-
- 	var Vertex = function() {
-		/*
-		 *	false - unavailable
-		 *	true - active
-		 *	-1 - deadlock
-		 */
-		this.bottom = false;
-		this.top = false;
-		this.left = false;
-		this.right = false;
-		this.label = -1;
-	};		
+	var j; 		
 
 	var countEdges = function(x, y) {
 		"use strict";
-		var top = vertexs[y-1][x-1].top ? 1 : 0;
+		var top = vertexs[y-1][x-1].top ? 0 : 1;
 		if (vertexs[y-1][x-1].top === -1) { top = 0 };
 
-		var bottom = vertexs[y-1][x-1].bottom ? 1 : 0;
+		var bottom = vertexs[y-1][x-1].bottom ? 0 : 1;
 		if (vertexs[y-1][x-1].bottom === -1) { bottom = 0 };
 
-		var left = vertexs[y-1][x-1].left ? 1 : 0;
+		var left = vertexs[y-1][x-1].left ? 0 : 1;
 		if (vertexs[y-1][x-1].left === -1) { left = 0 };
 
-		var right = vertexs[y-1][x-1].right ? 1 : 0;
+		var right = vertexs[y-1][x-1].right ? 0 : 1;
 		if (vertexs[y-1][x-1].right === -1) { right = 0 };
 
 		return (top + bottom + left + right);
@@ -75,31 +62,31 @@ var Graph = (function () {
 		while(true) {
 		    direction = getRandomInt(1,4);  
 
-			if ((direction === 1) && (y > 1) && (currentVertex.top === false)) { // top
-			    currentVertex.top = true;
+			if ((direction === 1)  && (currentVertex.top === true)) { // top
+			    currentVertex.top = false;
 	            y = y - 1; 
-	           	vertexs[y-1][x-1].bottom = true;
+	           	vertexs[y-1][x-1].bottom = false;
 	           	break;
 	        }
 		  
-		   	if ((direction === 2) && (x < width) && (currentVertex.right === false)) { // right
-	           	currentVertex.right = true;
+		   	if ((direction === 2) && (currentVertex.right === true)) { // right
+	           	currentVertex.right = false;
 	          	x = x + 1;
-	          	vertexs[y-1][x-1].left = true;
+	          	vertexs[y-1][x-1].left = false;
 	           	break;
 	        }
 		   
-		   	if ((direction === 3) && (y < height) && (currentVertex.bottom === false)) { // bottom
-	           	currentVertex.bottom = true;
+		   	if ((direction === 3)  && (currentVertex.bottom === true)) { // bottom
+	           	currentVertex.bottom = false;
 	            y = y + 1;
-	            vertexs[y-1][x-1].top = true;
+	            vertexs[y-1][x-1].top = false;
 	            break;
 		   	}
 
-		    if ((direction === 4) && (x > 1) && (currentVertex.left === false)) { // left
-		        currentVertex.left = true;
+		    if ((direction === 4) && (currentVertex.left === true)) { // left
+		        currentVertex.left = false;
 		        x = x - 1;
-		        vertexs[y-1][x-1].right = true;
+		        vertexs[y-1][x-1].right = false;
 		        break;
 		    }
 		}
@@ -152,7 +139,7 @@ var Graph = (function () {
 		 		index = vertexs[y-1][x-1].label;
 		 	}			 	
 		 	
-		 	while ((countAllEdges(x, y) == 4) && (path.length != 0)) { //check for tupik			 		
+		 	while ((countAllEdges(x, y) == 4) && (path.length != 0)) { //check for deadlock		 		
 		 		vertexs[y-1][x-1].label = -3; // mark as no way out		
 		 		elem = path.pop();			
 		 		result = removeEdge(x, y, elem);
@@ -190,10 +177,10 @@ var Graph = (function () {
 			for(j = 0; j < width; j++)  {
 				elem = vertexs[i][j];
 				//elem.label = -1;
-				if (elem.top === -1) { elem.top = false;}
-				if (elem.bottom === -1) { elem.bottom = false;}
-				if (elem.left === -1) { elem.left = false;}
-				if (elem.right === -1) { elem.right = false;}
+				if (elem.top === -1) { elem.top = true;}
+				if (elem.bottom === -1) { elem.bottom = true;}
+				if (elem.left === -1) { elem.left = true;}
+				if (elem.right === -1) { elem.right = true;}
 			}
 		}
 		return;
@@ -202,11 +189,16 @@ var Graph = (function () {
 	// Counts all available edges including deadlocks
 	var countAllEdges = function(x, y) {
 		"use strict";
-		var top = vertexs[y-1][x-1].top ? 1 : 0;
-		var bottom = vertexs[y-1][x-1].bottom ? 1 : 0;
-		var left = vertexs[y-1][x-1].left ? 1 : 0;
-		var right = vertexs[y-1][x-1].right ? 1 : 0;
-			return (top + bottom + left + right);
+		var top = vertexs[y-1][x-1].top;
+		var bottom = vertexs[y-1][x-1].bottom;
+		var left = vertexs[y-1][x-1].left;
+		var right = vertexs[y-1][x-1].right;
+
+		top = ((top === false) || (top === -1)) ? 1 : 0;
+		bottom = ((bottom === false) || (bottom === -1)) ? 1 : 0;
+		left = ((left === false) || (left === -1)) ? 1 : 0;
+		right = ((right === false) || (right === -1)) ? 1 : 0;
+		return (top + bottom + left + right);
 	};
 
 	/**
@@ -250,7 +242,7 @@ var Graph = (function () {
 			for(i = 0; i < height; i++)  {	
 				vertexs[i] = [];		
 				for(j = 0; j < width; j++)  {
-					vertexs[i][j] = new Vertex();
+					vertexs[i][j] = new Maze.Cell();
 				}
 			}
 
@@ -274,55 +266,60 @@ var Graph = (function () {
 			var pathB;
 			var i;			
 			var paths = [];
+			var allPaths = [];
 			var path;
-
+			var start;
+			var end;
+			var k;
 			// find first path
-			console.log("Start= " + start.x + " " + start.y + " finish= " + finish.x + " " + finish.y);
+			// find first path
+			console.log("Start= " + start.x + " " + start.y + " finish= " + finish.x + " " + finish.y);			 
 			var firstPath = generatePath(start, finish);
-			paths.push(firstPath)
-		/*	console.log(firstPath);*/
-			printVertexs();			
-			i = 1;		
+			allPaths.push(firstPath);
+			resetDeadLocks();
+			initVertexs();	
+			printVertexs();
 
+			i = 1;
 			while (i < possiblePaths) {
-				resetDeadLocks();		
-				initVertexs();			
-
-
-				
-				while(true) {
-					PointA = getRandomInt(0, firstPath.length-1);
-					pathA = firstPath[PointA]; // start
-					if((countAllEdges(pathA.x, pathA.y) != 4)) { break; }
-				}
-				
-				while(true) {
-					PointB = getRandomInt(0,  firstPath.length-1);
-					pathB = firstPath[PointB]; // finish
-					if((countAllEdges(pathB.x, pathB.y) != 4)) { break; }
-				}					
+				start = 0;
+				end = firstPath.length-1;
+				console.log(firstPath);
+				for (k = end; k > start; k = k-1) {
+					//console.log(k);
+					while ((countAllEdges(firstPath[start].x, firstPath[start].y) == 4) && (start < end)) {
+						start = start + 1;
+					}
+					if (countAllEdges(firstPath[k].x, firstPath[k].y) != 4) {
+						if (i < possiblePaths) { 							
+							path = generatePath(firstPath[start], firstPath[k]);
+							resetDeadLocks();
+							initVertexs();
+							if (path.length != 1) {							
+								paths.push(path);
+								allPaths.push(path);
+								i = i+1;
+							}
+							start = start +1;
+						} 					
+					}					
 					
-				path = generatePath(pathA, pathB);
-				if (path.length == 1) { // if there is not way
-					continue;
 				}
-				paths.push(path);
-				// added///////////////////////////////
-				firstPath = path;
-
-				i = i + 1;
-
-				/*console.log("-------------------------------------------------------------------------------------");
-				console.log("Start= " + pathA.x + " " + pathA.y + " finish= " + pathB.x + " " + pathB.y);
-				console.log("Path:");
-				console.log(path);*/
-				printVertexs();
+				
+				if (paths.length != 0) {
+					firstPath = paths.pop();
+				} else {
+					break;
+				}							
+				
 			}
+
+			printVertexs();
 			resetDeadLocks();// to remove -1 (deadlock) as -1 is true (a way)
-			
+			initVertexs();
 			console.log("Found paths:");
-			console.log(paths);
-			return paths;
+			console.log(allPaths);
+			return allPaths;
 		}
 	  
  	};

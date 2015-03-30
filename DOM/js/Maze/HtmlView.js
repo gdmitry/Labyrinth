@@ -1,6 +1,7 @@
-Maze.View = function(domContainer) {
+Maze.HtmlView = function(domContainer) {
 		
-		
+		var cellSize = 20;
+
 		var renderMaze = function (maze) {
 			"use strict";			
 
@@ -11,6 +12,7 @@ Maze.View = function(domContainer) {
 			var domCell;			
  			
 			data = maze.data;
+			
 			height = data.length;
 			width = data[0].length;
 
@@ -18,6 +20,8 @@ Maze.View = function(domContainer) {
 				for (j = 0; j < width; j++) {
 					domCell = document.createElement('div');						
 					domCell.classList.add("cell");
+					domCell.style.height = cellSize + "px";
+					domCell.style.width = cellSize + "px";
 	                if (data[i][j].right) {				
 	                	domCell.classList.add("cellRightBorder");											
 	                }
@@ -34,7 +38,7 @@ Maze.View = function(domContainer) {
 				}
 			}
 
-			domContainer.style.width = 20 * width + "px";
+			domContainer.style.width = cellSize * width + "px";
 		};
 
 		var renderPath = function(path) {

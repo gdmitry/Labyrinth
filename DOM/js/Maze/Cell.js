@@ -13,4 +13,5 @@ Maze.Cell = function() {
 	this.left = true;
 	this.right = true;
 	this.bottom = true;
+	this.label = -1;
 };
