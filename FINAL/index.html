@@ -1,10 +1,10 @@
 <html>
 <head>
-<meta charset="utf-8" />
-<link rel="stylesheet" href="style.css">
-<meta name="keywords" content="" />
-<meta name="description" content="" />
-<title>The maze</title>
+    <meta charset="utf-8"/>
+    <link rel="stylesheet" href="style.css">
+    <meta name="keywords" content=""/>
+    <meta name="description" content=""/>
+    <title>The maze</title>
 </head>
 <body>
 <script type="text/javascript" charset="utf-8" src="js/Maze.js"></script>
@@ -14,133 +14,138 @@
 <script type="text/javascript" charset="utf-8" src="js/Maze/HtmlView.js"></script>
 <script type="text/javascript" charset="utf-8" src="js/Maze/CanvasView.js"></script>
 <script type="text/javascript" charset="utf-8" src="js/Maze/Ball.js"></script>
-	<div class="fix">
-		<div class="header">			
-			<p class="title">The Maze problem</p>			
-		</div>
-		<div class="content">
-      <form id="control">
-			<table>
-				  <tr>
-					<td>Width:</td>
-					<td><input type="text" value="5" id="width"></td>    
-					<td>Start:</td>
-					<td><input type="text" value="1,1" id="begin"></td> 
-				  </tr>
-				  <tr>
-					<td>Height:</td>
-					<td><input type="text" value="5" id="height"></td>
-					 <td>Finish:</td>
-					<td><input type="text" value="5,5" id="end"></td>     
-				  </tr> 
-				  <tr>
-					<td>Start:</td>
-					<td><input type="text" value="1,1" id="start"></td>   
-					</tr>
-				  <tr>
-					<td>Finish:</td>
-					<td><input type="text" value="5,5" id="finish"></td>  
-				  </tr>
-				  <tr>
-					<td>Possible Paths:</td>
-					<td><input type="text" value="2" id="possiblePaths"></td>   
-				  </tr> 
-				</table>
-				<table>
-				  <tr>
-					<td><button type="button" id = "generate">Generate maze</button></td>
-					<td><button type="button" id="renderMaze">Render maze</button></td>    
-					<td><button type="button" id="getPaths">Get paths</button></td>
-					<td><button type="button" id="renderPath">Render path</button></td>   
-				  </tr>
-				</table>
-      </form>
-				<hr>
-				<div class="field" id="maze">  
-				</div>
-       	</div>
-		
-		<div class="footer">
-		<p>Maze production.</p>
-		</div>	
-	</div>
-	<script>  	 
+<div class="fix">
+    <div class="header">
+        <p class="title">The Maze problem</p>
+    </div>
+    <div class="content">
+        <form id="control">
+            <table>
+                <tr>
+                    <td>Width:</td>
+                    <td><input type="text" value="5" id="width"></td>
+                    <td>Start:</td>
+                    <td><input type="text" value="1,1" id="begin"></td>
+                </tr>
+                <tr>
+                    <td>Height:</td>
+                    <td><input type="text" value="5" id="height"></td>
+                    <td>Finish:</td>
+                    <td><input type="text" value="5,5" id="end"></td>
+                </tr>
+                <tr>
+                    <td>Start:</td>
+                    <td><input type="text" value="1,1" id="start"></td>
+                </tr>
+                <tr>
+                    <td>Finish:</td>
+                    <td><input type="text" value="5,5" id="finish"></td>
+                </tr>
+                <tr>
+                    <td>Possible Paths:</td>
+                    <td><input type="text" value="2" id="possiblePaths"></td>
+                </tr>
+            </table>
+            <table>
+                <tr>
+                    <td>
+                        <button type="button" id="generate">Generate maze</button>
+                    </td>
+                    <td>
+                        <button type="button" id="renderMaze">Render maze</button>
+                    </td>
+                    <td>
+                        <button type="button" id="getPaths">Get paths</button>
+                    </td>
+                    <td>
+                        <button type="button" id="renderPath">Render path</button>
+                    </td>
+                </tr>
+            </table>
+        </form>
+        <hr>
+        <div class="field" id="maze">
+        </div>
+    </div>
+    <div class="footer">
+        <p>Maze production.</p>
+    </div>
+</div>
+<script>
     //var view = new Maze.HtmlView(document.querySelector('#maze')); 
-    var view = new Maze.CanvasView(document.querySelector('#maze')); 
+    var view = new Maze.CanvasView(document.querySelector('#maze'));
     var ball = new Maze.Ball(document.querySelector('#maze'));
-    var paths =[];
+    var paths = [];
     var element;
     var index;
 
-    
     function generateMaze(event) {
         var width = parseInt(document.getElementById('width').value, 10);
         var height = parseInt(document.getElementById('height').value, 10);
         var possiblePaths = parseInt(document.getElementById('possiblePaths').value, 10);
         var start = document.getElementById('start').value.split(",");
-        var finish = document.getElementById('finish').value.split(",");       
-        setTimeout(function(){ 
-          maze = Maze.generate({
-              width: width,
-              height: height,
-              possiblePaths: possiblePaths,
-              start: {x: parseInt(start[0],10), y: parseInt(start[1],10)},
-              finish: {x: parseInt(finish[0],10), y: parseInt(finish[1],10)}
-          });
-          }   
-        , 500);               
+        var finish = document.getElementById('finish').value.split(",");
+        setTimeout(function () {
+                    maze = Maze.generate({
+                        width: width,
+                        height: height,
+                        possiblePaths: possiblePaths,
+                        start: {x: parseInt(start[0], 10), y: parseInt(start[1], 10)},
+                        finish: {x: parseInt(finish[0], 10), y: parseInt(finish[1], 10)}
+                    });
+                }
+                , 500);
     }
-  
+
     function renderMaze(event) {
-        view.render(maze);       
+        view.render(maze);
     }
 
     function getPaths(event) {
         var start = document.getElementById('begin').value.split(",");
         var finish = document.getElementById('end').value.split(",");
 
-        start = {x: parseInt(start[0],10), y: parseInt(start[1],10)};
-        finish = {x: parseInt(finish[0],10), y: parseInt(finish[1],10)};
-        setTimeout(function(){ 
-          paths = maze.getPaths(start, finish);
-          sortPaths(paths);
-          alert("Found " + paths.length + " paths");  
-         }   
-        , 500);  
-        index = 0;     
+        start = {x: parseInt(start[0], 10), y: parseInt(start[1], 10)};
+        finish = {x: parseInt(finish[0], 10), y: parseInt(finish[1], 10)};
+        setTimeout(function () {
+                    paths = maze.getPaths(start, finish);
+                    sortPaths(paths);
+                    alert("Found " + paths.length + " paths");
+                }
+                , 500);
+        index = 0;
     }
 
-    function renderPath(event) {           
-        view.render(paths[index]);        
+    function renderPath(event) {
+        view.render(paths[index]);
         ball.startBall(paths[index]);
 
-        if (index < paths.length-1) {            
+        if (index < paths.length - 1) {
             index++;
         } else {
             index = 0;
         }
-
-    }     
+    }
 
     // sorting array of all found paths
-    function sortPaths(paths) {      
-        paths.sort(function(a, b) {
-          return a.data.length - b.data.length;
-        });       
+    function sortPaths(paths) {
+        paths.sort(function (a, b) {
+            return a.data.length - b.data.length;
+        });
         return paths;
     }
 
     element = document.getElementById("generate");
     element.onclick = generateMaze;
-    
+
     element = document.getElementById("renderMaze");
     element.onclick = renderMaze;
-    
+
     element = document.getElementById("getPaths");
     element.onclick = getPaths;
-    
+
     element = document.getElementById("renderPath");
-    element.onclick = renderPath;  
+    element.onclick = renderPath;
 
 </script>
 </body>

@@ -17,8 +17,8 @@ function MazeView(w, h) {
     }
 
     this.drawField = function (firstrow) {
-        var numH = h/d;
-        var numW = w/d;
+        var numH = h / d;
+        var numW = w / d;
         var i;
         var j;
 
@@ -26,61 +26,61 @@ function MazeView(w, h) {
             for (i = 0; i < numW; i++) {
                 if (firstrow[j][i].hasRightBorder == true) {
                     context.beginPath();
-                    context.moveTo(i*d+d, j*d+1);
-                    context.lineTo(i*d+d,j*d+1+d);
+                    context.moveTo(i * d + d, j * d + 1);
+                    context.lineTo(i * d + d, j * d + 1 + d);
                     context.stroke();
                 }
 
                 if (firstrow[j][i].hasBottomBorder == true) {
                     context.beginPath();
-                    context.moveTo(i*d, j*d+d);
-                    context.lineTo(i*d+d,j*d+d);
+                    context.moveTo(i * d, j * d + d);
+                    context.lineTo(i * d + d, j * d + d);
                     context.stroke();
                 }
-				// draw set numbers
-				//context.fillStyle = "black";
-				// context.fillText(firstrow[j][i].getSetNumber(),i*d+d/2-3,j*d+d/2+5);
-				//context.fillText(firstrow[j][i].getLabel(),i*d+d/2-3,j*d+d/2+5);   // prints the label
+                // draw set numbers
+                //context.fillStyle = "black";
+                // context.fillText(firstrow[j][i].getSetNumber(),i*d+d/2-3,j*d+d/2+5);
+                //context.fillText(firstrow[j][i].getLabel(),i*d+d/2-3,j*d+d/2+5);   // prints the label
             }
         }
 
     }
 
     this.drawBorders = function () {
-        context.lineWidth=2;
+        context.lineWidth = 2;
         context.beginPath();
-        context.moveTo(0+1,0+1);
-        context.lineTo(w,0+1);
-        context.moveTo(w,0+1);
-        context.lineTo(w,h);
-        context.moveTo(w,h);
-        context.lineTo(0+1,h);
-        context.moveTo(0+1,h);
-        context.lineTo(0+1,0);
+        context.moveTo(0 + 1, 0 + 1);
+        context.lineTo(w, 0 + 1);
+        context.moveTo(w, 0 + 1);
+        context.lineTo(w, h);
+        context.moveTo(w, h);
+        context.lineTo(0 + 1, h);
+        context.moveTo(0 + 1, h);
+        context.lineTo(0 + 1, 0);
         context.stroke();
     }
 
     this.drawInOut = function (o) {
-        context.lineWidth=2;
+        context.lineWidth = 2;
         context.fillStyle = "yellow";
         context.beginPath();
-        context.fillText('in',o[0][0]*d - d/2 - 4,o[0][1]*d - d/2+3);
-        context.fillText('out',o[1][0]*d - d/2 - 7,o[1][1]*d - d/2+3);
+        context.fillText('in', o[0][0] * d - d / 2 - 4, o[0][1] * d - d / 2 + 3);
+        context.fillText('out', o[1][0] * d - d / 2 - 7, o[1][1] * d - d / 2 + 3);
         context.stroke();
     }
-	
-	 this.drawRoute = function (route) {
+
+    this.drawRoute = function (route) {
         var i;
 
-		//console.log(route);
-		context.lineWidth=2;
+        //console.log(route);
+        context.lineWidth = 2;
         context.strokeStyle = 'white';
         context.beginPath();
-		context.moveTo(route[0][0]*d-d/2+1,route[0][1]*d-d/2+2);
-		for (i = 1; i < route.length; i++) {
-			context.lineTo(route[i][0]*d-d/2+1,route[i][1]*d-d/2+2);
-		}
-		context.stroke();
-	 }
+        context.moveTo(route[0][0] * d - d / 2 + 1, route[0][1] * d - d / 2 + 2);
+        for (i = 1; i < route.length; i++) {
+            context.lineTo(route[i][0] * d - d / 2 + 1, route[i][1] * d - d / 2 + 2);
+        }
+        context.stroke();
+    }
     return this;
 }
